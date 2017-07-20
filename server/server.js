@@ -21,12 +21,27 @@ app.post('/todos', (req, res) => {
 	});
 });
 
+
+// Render out all todos
+app.get('/todos', (req, res) => {
+
+	Todo.find().then( todos => {
+
+		// send back an object instead of an array,
+		// so later its easier to add other properties.
+		res.send({todos});
+	}, e => {
+		res.status(400).send(e);
+	});
+
+})
+
 app.listen(3000, () => {
 	console.log('Started on port 3000.');
 });
 
 
-
+module.exports = {app};
 
 
 
