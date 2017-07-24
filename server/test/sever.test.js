@@ -4,11 +4,21 @@ const expect = require('expect'),
 const { app } = require('./../server'),
 	  { Todo } = require('./../models/todo');
 
+const todos = [{
+	text: 'First todo',
+	description: 'First things first.'
+}, {
+	text: 'Second todo',
+	description: 'Just some dummy text'
+}];
+
 // clear the database before running the test by removing all todo's
 // so the test starts with 0 todo's and,
 // "expect(todos.length).toBe(1)" will pass.
 beforeEach(done => {
-	Todo.remove({}).then(() => done());
+	Todo.remove({}).then(() => {
+		return Todo.insertMany(todos);
+	}).then( () => done());
 });
 
 // Add a test case.
@@ -18,7 +28,8 @@ beforeEach(done => {
 // which means the test will run after each change on the app.
 describe('POST /todos', () => {
 	it('Should create a new todo', done => {
-		let text = 'Test todo text';
+
+		let text = 'Test post todo';
 
 		// make the request with supertest.
 		// pass in the app to make the test on.
@@ -40,7 +51,7 @@ describe('POST /todos', () => {
 				}
 
 				// fetch all the todo's
-				Todo.find().then( todos => {
+				Todo.find({text}).then( todos => {
 
 					// should be one todo that we inserted above
 					expect(todos.length).toBe(1);
@@ -53,7 +64,7 @@ describe('POST /todos', () => {
 			}); 
 	});
 
-	Todo.remove({});
+	
 
 	it('should not create todo with invalid body data', done => {
 		request(app)
@@ -64,13 +75,41 @@ describe('POST /todos', () => {
 				if (err) return done(err)
 
 				Todo.find().then( todos => {
-					expect(todos.length).toBe(0);
+					expect(todos.length).toBe(2);
 					done();
 				}).catch( e => done(e));
 			});
 	});
 
 });
+
+describe('GET /todos', () => {
+	it('should get all todos', done => {
+		request(app)
+			.get('/todos')
+			.expect(200)
+			.expect(res => {
+				expect(res.body.todos.length).toBe(2);
+			})
+			.end(done);
+	});
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

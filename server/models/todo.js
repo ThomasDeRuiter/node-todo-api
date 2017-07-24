@@ -13,6 +13,9 @@ const Todo = mongoose.model('Todo', {
 	description: {
 		type: String,
 		trim: true
+	},
+	completed: {
+		default: false
 	}
 });
 
