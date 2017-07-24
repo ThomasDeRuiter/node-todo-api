@@ -10,20 +10,15 @@ const Todo = mongoose.model('Todo', {
 		minlength: 2,
 		trim: true // remove leading white spaces.
 	},
-	completed: {
-		type: Boolean,
-		default: false
-	},
-	completedAt: {
-		type: Number,
-		default: null
+	description: {
+		type: String,
+		trim: true
 	}
 });
 
 // let newTodo = new Todo({
 // 	text: 'Workout',
-// 	completed: true,
-// 	completedAt: 18072017
+// 	description: 'Train back and shoulders'.
 // });
 
 // // save() returns a promise
